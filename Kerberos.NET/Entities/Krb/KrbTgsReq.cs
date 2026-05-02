@@ -95,7 +95,11 @@ namespace Kerberos.NET.Entities
                 Realm = rst.Realm,
                 SName = new KrbPrincipalName()
                 {
-                    Type = PrincipalNameType.NT_SRV_INST,
+                    // Default NT_SRV_INST (2) preserves prior behavior for S4U / regular-Kerberos callers.
+                    // U2U callers (RDP smart-card autologon) can opt into NT_SRV_HST (3) via
+                    // RequestServiceTicket.SNameType to match FreeRDP/mstsc wire bytes — Windows AD
+                    // KDC reflects the requested name-type into the issued service ticket's sname.
+                    Type = rst.SNameType ?? PrincipalNameType.NT_SRV_INST,
                     Name = sname
                 },
                 Till = EndOfTime,

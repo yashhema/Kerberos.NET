@@ -96,6 +96,22 @@ namespace Kerberos.NET
         /// </summary>
         public bool? CacheTicket { get; set; }
 
+        /// <summary>
+        /// Indicates whether to generate an initiator subkey in the authenticator, even without MutualRequired.
+        /// This is required for protocols like MongoDB GSSAPI that use GSS_Wrap/Unwrap for SASL security layers
+        /// but don't require mutual authentication. SSPI always generates a subkey; setting this to true
+        /// makes Kerberos.NET behave like SSPI.
+        /// </summary>
+        public bool GenerateSubkey { get; set; }
+
+        /// <summary>
+        /// Optionally overrides the SName name-type in the TGS-REQ KdcReqBody. Default null → NT_SRV_INST (2),
+        /// preserving prior behavior. Set to NT_SRV_HST (3) for callers that need to match FreeRDP/mstsc wire
+        /// bytes (e.g. RDP smart-card autologon U2U path) — Windows AD KDC reflects this into the issued
+        /// ticket's sname.
+        /// </summary>
+        public PrincipalNameType? SNameType { get; set; }
+
         public bool CanCacheTicket => this.CacheTicket ?? true &&
                                       string.IsNullOrWhiteSpace(this.S4uTarget) &&
                                       this.S4uTicket == null &&

@@ -97,6 +97,9 @@
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.0" />
+    <!-- Used by Linux PAL for portable Diffie-Hellman MODP-14 key agreement (PKINIT).
+         The Windows PAL uses native BCrypt; Linux PAL had no implementation. -->
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.4.0" />
   </ItemGroup>
 
   <ItemGroup>

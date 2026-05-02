@@ -81,7 +81,10 @@ namespace Kerberos.NET.Entities
                 authenticator.SequenceNumber = GetNonce();
             }
 
-            if (rst.ApOptions.HasFlag(ApOptions.MutualRequired))
+            // Generate a subkey if MutualRequired OR if explicitly requested via GenerateSubkey.
+            // SSPI always generates a subkey; GenerateSubkey allows Kerberos.NET to match SSPI behavior
+            // for protocols like MongoDB GSSAPI that need GSS_Wrap without mutual auth.
+            if (rst.ApOptions.HasFlag(ApOptions.MutualRequired) || rst.GenerateSubkey)
             {
                 authenticator.Subkey = KrbEncryptionKey.Generate(authenticatorKey.EncryptionType);
             }
